@@ -96,6 +96,7 @@ function handlecmake {
     cd cmake-3.0.2/
     ./configure --prefix=/usr
     gmake && gmake install
+    cd ..
   fi
 }
 
