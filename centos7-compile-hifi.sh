@@ -108,11 +108,23 @@ function handleglm {
   fi
 }
 
-function handlebullet {
+function handlebullet283 {
   if [ ! -f "Bullet-2.83-alpha.tar.gz" ]; then
     wget https://github.com/bulletphysics/bullet3/archive/Bullet-2.83-alpha.tar.gz
     tar -xzvf Bullet-2.83-alpha.tar.gz
     cd bullet3-Bullet-2.83-alpha/
+    cmake -G "Unix Makefiles"
+    make && make install
+    cd ..
+  fi
+}
+
+function handlebullet282 {
+#https://bullet.googlecode.com/files/bullet-2.82-r2704.zip
+  if [ ! -f "bullet-2.82-r2704.zip" ]; then
+    wget https://bullet.googlecode.com/files/bullet-2.82-r2704.zip
+    unzip bullet-2.82-r2704.zip
+    cd bullet-2.82-r2704
     cmake -G "Unix Makefiles"
     make && make install
     cd ..
@@ -134,8 +146,9 @@ function compilehifi {
      
     # Handle BulletSim
     # Check for a file from the default BulletSim Install
-    if [[ ! -a "/usr/local/lib/cmake/bullet/UseBullet.cmake" ]]; then
-      handlebullet
+    if [[ ! -a "/usr/local/lib/cmake/bullet/BulletConfig.cmake" || $(cat /usr/local/lib/cmake/bullet/BulletConfig.cmake) =~ "2.83" ]]; then
+      handlebullet282
+      NEWHIFI=1      
     fi
 
     if [[ ! -d "highfidelity" ]]; then
@@ -172,9 +185,7 @@ function compilehifi {
     fi
 
     # Future todo - add a forcable call to the shell script to override this
-    UPTODATE="Already up-to-date."
- 
-    if [[ "$(git pull)"=="$UPTODATE"  ]]; then
+    if [[ $(git pull) =~ "Already up-to-date." ]]; then
       echo "Already up to date with last commit."
     else
       NEWHIFI=1
