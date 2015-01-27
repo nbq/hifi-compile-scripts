@@ -15,15 +15,17 @@ NEWHIFI=0
 
 ## Functions ##
 function doyum {
-  echo "Checking Yum Dependancies - Installing If Needed (will take a while)"
-  yum install epel-release -y > /dev/null
-  yum groupinstall "development tools" -y > /dev/null
-  yum install openssl-devel git wget gzip freeglut* libXmu-* libXi-devel glew glew-devel tbb tbb-devel qt5-qt* -y > /dev/null
+  echo "Installing EPEL Repo."
+  yum install epel-release -y > /dev/null 2>&1
+  echo "Installing compile tools, this may take a while on first run."
+  yum groupinstall "development tools" -y > /dev/null 2>&1
+  echo "Installing base needed tools, this also may take a while on first run."
+  yum install openssl-devel git wget freeglut* libXmu-* libXi-devel glew glew-devel tbb tbb-devel qt5-qt* -y > /dev/null 2>&1
 }
 
 function killrunning {
-  kill $(ps aux | grep '[d]omain-server' | awk '{print $2}')
-  kill $(ps aux | grep '[a]ssignment-client' | awk '{print $2}')
+  kill $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null
+  kill $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null
 }
 
 function createuser {
@@ -143,6 +145,7 @@ function compilehifi {
 
     if [[ ! -d "gverb" ]]; then
       git clone https://github.com/highfidelity/gverb.git
+      NEWHIFI=1
     else
       # assumes this is the proper git directory, could check for .git folder to verify
       cd gverb
@@ -152,6 +155,7 @@ function compilehifi {
 
     if [[ ! -d "hifi" ]]; then
       git clone https://github.com/highfidelity/hifi.git
+      NEWHIFI=1
     fi
     
     # popd src
@@ -169,11 +173,14 @@ function compilehifi {
     # Future todo - add a forcable call to the shell script to override this
     UPTODATE="Already up-to-date."
  
-    if [[ "$(git pull)"=="$UPTODATE" ]]; then
+    if [[ "$(git pull)"=="$UPTODATE"  ]]; then
       echo "Already up to date with last commit."
     else
-      echo "Source needs compiling."
       NEWHIFI=1
+    fi
+
+    if [[ $NEWHIFI -eq 1 ]]; then
+      echo "Source needs compiling."
       # we are still assumed to be in hifi directory
       if [ -d "build" ]; then
         rm -rf build/*
