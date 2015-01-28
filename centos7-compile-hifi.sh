@@ -14,6 +14,16 @@ SRCDIR="/usr/local/src"
 NEWHIFI=0
 
 ## Functions ##
+function checkroot {
+  [ `whoami` = root ] || { sudo "$0" "$@"; exit $?; }
+}
+
+function checkifrunning {
+  # Not used now, but in the future will check if ds/ac is running then offer to restart if so
+  # For now we just auto restart.
+  [[ $(pidof domain-server) -gt 0 ]] && { HIFIRUNNING=1; }
+}
+
 function doyum {
   echo "Installing EPEL Repo."
   yum install epel-release -y > /dev/null 2>&1
@@ -24,8 +34,8 @@ function doyum {
 }
 
 function killrunning {
-  kill $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null
-  kill $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null
+  kill $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null 2>&1
+  kill $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null 2>&1
 }
 
 function createuser {
@@ -58,12 +68,12 @@ function setuphifidirs {
   if [[ $NEWHIFI -eq 1 ]]; then
     pushd $HIFIDIR > /dev/null
 
-    if [ ! -d "$LASTCOMPILE" ]; then
+    if [[ ! -d "$LASTCOMPILE" ]]; then
       echo "Creating Last-Compile Backup Directory"
       mkdir $LASTCOMPILE
     fi
 
-    if [ ! -d "$RUNDIR" ]; then
+    if [[ ! -d "$RUNDIR" ]]; then
       echo "Creating Runtime Directory"
       mkdir $RUNDIR
     fi
@@ -90,7 +100,7 @@ function setuphifidirs {
 }
 
 function handlecmake {
-  if [ ! -f "cmake-3.0.2.tar.gz" ]; then
+  if [[ ! -f "cmake-3.0.2.tar.gz" ]]; then
     wget http://www.cmake.org/files/v3.0/cmake-3.0.2.tar.gz
     tar -xzvf cmake-3.0.2.tar.gz
     cd cmake-3.0.2/
@@ -101,7 +111,7 @@ function handlecmake {
 }
 
 function handleglm {
-  if [ ! -d "/usr/include/glm" ]; then
+  if [[ ! -d "/usr/include/glm" ]]; then
     wget http://softlayer-dal.dl.sourceforge.net/project/ogl-math/glm-0.9.5.4/glm-0.9.5.4.zip
     unzip glm-0.9.5.4.zip
     mv glm/glm /usr/include
@@ -120,7 +130,7 @@ function handlebullet283 {
 }
 
 function handlebullet282 {
-#https://bullet.googlecode.com/files/bullet-2.82-r2704.zip
+  #https://bullet.googlecode.com/files/bullet-2.82-r2704.zip
   if [ ! -f "bullet-2.82-r2704.zip" ]; then
     wget https://bullet.googlecode.com/files/bullet-2.82-r2704.zip
     unzip bullet-2.82-r2704.zip
@@ -177,10 +187,10 @@ function compilehifi {
     pushd $SRCDIR/highfidelity/hifi > /dev/null 
   
     # Link gverb libs in with hifi interface directory
-    if [ ! -L "$SRCDIR/highfidelity/hifi/interface/external/gverb/src" ]; then
+    if [[ ! -L "$SRCDIR/highfidelity/hifi/interface/external/gverb/src" ]]; then
       ln -s $SRCDIR/highfidelity/gverb/src $SRCDIR/highfidelity/hifi/interface/external/gverb/src
     fi
-    if [ ! -L "$SRCDIR/highfidelity/hifi/interface/external/gverb/include" ]; then
+    if [[ ! -L "$SRCDIR/highfidelity/hifi/interface/external/gverb/include" ]]; then
       ln -s $SRCDIR/highfidelity/gverb/include $SRCDIR/highfidelity/hifi/interface/external/gverb/include
     fi
 
@@ -194,7 +204,7 @@ function compilehifi {
     if [[ $NEWHIFI -eq 1 ]]; then
       echo "Source needs compiling."
       # we are still assumed to be in hifi directory
-      if [ -d "build" ]; then
+      if [[ -d "build" ]]; then
         rm -rf build/*
       else
         mkdir build

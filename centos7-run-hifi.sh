@@ -12,22 +12,27 @@
 # http://hifi-public.s3.amazonaws.com/content-sets/space/models.svo
 #path ^ /1000,100,100
 
+function checkroot {
+  [ `whoami` = root ] || { sudo "$0" "$@"; exit $?; }
+}
+
 function killrunning {
-  kill $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null
-  kill $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null
+  kill $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null 2>&1
+  kill $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null 2>&1
 }
 
 function runashifi {
   # Everything here is run as the user hifi
-  TIMESTAMP=$(date '+%F-%H.%M.%S')
+  TIMESTAMP=$(date '+%F')
   HIFIDIR=/usr/local/hifi
   HIFIRUNDIR=$HIFIDIR/run
   HIFILOGDIR=$HIFIDIR/logs
   cd $HIFIRUNDIR
-  nohup ./domain-server &> $HIFILOGDIR/domain-$TIMESTAMP.log&
-  nohup ./assignment-client -n 4 &> $HIFILOGDIR/assignment-$TIMESTAMP.log&
+  nohup ./domain-server &>> $HIFILOGDIR/domain-$TIMESTAMP.log&
+  nohup ./assignment-client -n 4 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
 }
 
+checkroot
 killrunning
 export -f runashifi
 su hifi -c "bash -c runashifi"
