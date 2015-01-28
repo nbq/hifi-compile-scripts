@@ -10,8 +10,6 @@ RUNDIR="$HIFIDIR/run"
 LOGSDIR="$HIFIDIR/logs"
 # Source Storage Dir
 SRCDIR="/usr/local/src"
-# If this is 1 (true) then we need to handle the hifi init stuff
-NEWHIFI=0
 
 ## Functions ##
 function checkroot {
@@ -22,6 +20,26 @@ function checkifrunning {
   # Not used now, but in the future will check if ds/ac is running then offer to restart if so
   # For now we just auto restart.
   [[ $(pidof domain-server) -gt 0 ]] && { HIFIRUNNING=1; }
+}
+
+function handlerunhifi {
+  if [[ $NEWHIFI -eq 1 || HIFIRUNNING -eq 1 ]]; then
+    echo "Restarting your HiFi Stack as user 'hifi'"
+    export -f runashifi
+    su hifi -c "bash -c runashifi"
+    exit 0
+  fi
+}
+
+function runashifi {
+  # Everything here is run as the user hifi
+  TIMESTAMP=$(date '+%F')
+  HIFIDIR=/usr/local/hifi
+  HIFIRUNDIR=$HIFIDIR/run
+  HIFILOGDIR=$HIFIDIR/logs
+  cd $HIFIRUNDIR
+  nohup ./domain-server &>> $HIFILOGDIR/domain-$TIMESTAMP.log&
+  nohup ./assignment-client -n 4 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
 }
 
 function doyum {
@@ -36,6 +54,9 @@ function doyum {
 function killrunning {
   kill $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null 2>&1
   kill $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null 2>&1
+  # Flags HIFIRUNNING here since in the future it will be used as a flag to
+  # check if it actually was running, this makes it restart on rebuild.
+  HIFIRUNNING=1
 }
 
 function createuser {
@@ -236,6 +257,9 @@ function movehifi {
 
 ## End Functions ##
 
+# Make sure only root can run this
+checkroot
+
 # Handle Yum Install Commands
 doyum
 
@@ -250,3 +274,6 @@ setuphifidirs
 
 # copy new binaries then change owner
 movehifi
+
+# Handle re-running the hifi stack as needed here
+handlerunhifi
