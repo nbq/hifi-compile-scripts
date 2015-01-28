@@ -214,6 +214,7 @@ function movehifi {
   # least error checking here, we pretty much assume that if this is a new compile per the flag
   # then you have all the proper folders and files already.
   if [[ $NEWHIFI -eq 1  ]]; then
+    killrunning
     DSDIR="$SRCDIR/highfidelity/hifi/build/domain-server"
     ACDIR="$SRCDIR/highfidelity/hifi/build/assignment-client"
     cp $DSDIR/domain-server $RUNDIR
