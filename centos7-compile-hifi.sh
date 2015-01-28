@@ -48,7 +48,7 @@ function doyum {
   echo "Installing compile tools, this may take a while on first run."
   yum groupinstall "development tools" -y > /dev/null 2>&1
   echo "Installing base needed tools, this also may take a while on first run."
-  yum install openssl-devel git wget freeglut* libXmu-* libXi-devel glew glew-devel tbb tbb-devel qt5-qt* -y > /dev/null 2>&1
+  yum install openssl-devel git wget sudo  freeglut* libXmu-* libXi-devel glew glew-devel tbb tbb-devel qt5-qt* -y > /dev/null 2>&1
 }
 
 function killrunning {
