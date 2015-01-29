@@ -17,8 +17,8 @@ function checkroot {
 }
 
 function killrunning {
-  kill $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null 2>&1
-  kill $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null 2>&1
+  kill -9 $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null 2>&1
+  kill -9 $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null 2>&1
 }
 
 function runashifi {

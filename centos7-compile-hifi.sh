@@ -52,8 +52,8 @@ function doyum {
 }
 
 function killrunning {
-  kill $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null 2>&1
-  kill $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null 2>&1
+  kill -9 $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null 2>&1
+  kill -9 $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null 2>&1
   # Flags HIFIRUNNING here since in the future it will be used as a flag to
   # check if it actually was running, this makes it restart on rebuild.
   HIFIRUNNING=1
@@ -233,6 +233,7 @@ function compilehifi {
       cd build
       cmake ..
       make domain-server && make assignment-client
+      setwebperm
     fi 
     # ^ Ending the git pull check
 
@@ -241,11 +242,16 @@ function compilehifi {
   fi
 }
 
+function setwebperm {
+  chown -R hifi:hifi $SRCDIR/highfidelity/hifi/domain-server/resources/web
+}
+
 function movehifi {
   # least error checking here, we pretty much assume that if this is a new compile per the flag
   # then you have all the proper folders and files already.
   if [[ $NEWHIFI -eq 1  ]]; then
     killrunning
+    setwebperm
     DSDIR="$SRCDIR/highfidelity/hifi/build/domain-server"
     ACDIR="$SRCDIR/highfidelity/hifi/build/assignment-client"
     cp $DSDIR/domain-server $RUNDIR
