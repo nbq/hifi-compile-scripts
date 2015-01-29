@@ -6,7 +6,7 @@
 
 **Command To Start The Process From a New CentOS 7 Install**
 
-`bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-run-hifi.sh)`
+`bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-compile-hifi.sh)`
  
 **Command To Restart The DS/AC**
 
