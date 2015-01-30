@@ -16,6 +16,19 @@ function checkroot {
   [ `whoami` = root ] || { sudo "$0" "$@"; exit $?; }
 }
 
+function writecommands {
+if [[ ! $(cat ~/.bashrc) =~ "compilehifi" && ! $(cat ~/.bashrc) =~ "runhifi" ]]; then
+  echo "Writing Bash Command Aliases"
+cat <<EOF >> ~/.bashrc
+
+alias compilehifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-compile-hifi.sh)'
+alias runhifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-run-hifi.sh)'
+
+EOF
+source ~/.bashrc
+fi
+}
+
 function checkifrunning {
   # Not used now, but in the future will check if ds/ac is running then offer to restart if so
   # For now we just auto restart.
@@ -278,8 +291,11 @@ createuser
 # setup hifi folders
 setuphifidirs
 
-# copy new binaries then change owner
+# Copy new binaries then change owner
 movehifi
+
+# Copy commands to be run to .bashrc
+writecommands
 
 # Handle re-running the hifi stack as needed here
 handlerunhifi
