@@ -226,7 +226,7 @@ function compilehifi {
       ln -s $SRCDIR/highfidelity/gverb/src $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src
     fi
     if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include" ]]; then
-      ln -s $SRCDIR/highfidelity/gverb/include $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/inclue
+      ln -s $SRCDIR/highfidelity/gverb/include $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include
     fi
 
     # Future todo - add a forcable call to the shell script to override this
