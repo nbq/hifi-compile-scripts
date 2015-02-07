@@ -1,12 +1,10 @@
 # Coal's CentOS 7 Compile Scripts
 
-**NOTICE: THESE ARE MEANT TO BE RAN FROM BRAND NEW INSTALLS ONLY**
+**NOTICE: THIS IS MEANT TO BE RAN FROM BRAND NEW INSTALLS ONLY**
 
-*These script are subject to change and using them are at your own risk*
+*This script is subject to change and using it is at your own risk*
 
 **Command To Start The Process From a New CentOS 7 Install**
-
-*To understand exactly what this script does, refer to the `compilehifi` command reference below*
 
 *What This Script Does*
 

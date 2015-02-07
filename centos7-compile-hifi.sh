@@ -61,7 +61,7 @@ function doyum {
   echo "Installing compile tools, this may take a while on first run."
   yum groupinstall "development tools" -y > /dev/null 2>&1
   echo "Installing base needed tools, this also may take a while on first run."
-  yum install openssl-devel git wget sudo  freeglut* libXmu-* libXi-devel glew glew-devel tbb tbb-devel qt5-qt* -y > /dev/null 2>&1
+  yum install openssl-devel git wget sudo  freeglut* libXmu-* libXi-devel glew glew-devel tbb tbb-devel soxr soxr-devel qt5-qt* -y > /dev/null 2>&1
 }
 
 function killrunning {
@@ -219,13 +219,14 @@ function compilehifi {
     # popd src
     popd > /dev/null
     pushd $SRCDIR/highfidelity/hifi > /dev/null 
-  
+
     # Link gverb libs in with hifi interface directory
-    if [[ ! -L "$SRCDIR/highfidelity/hifi/interface/external/gverb/src" ]]; then
-      ln -s $SRCDIR/highfidelity/gverb/src $SRCDIR/highfidelity/hifi/interface/external/gverb/src
+    # now new directory: /usr/local/src/highfidelity/hifi/libraries/audio-client/external/gverb/
+    if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src" ]]; then
+      ln -s $SRCDIR/highfidelity/gverb/src $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src
     fi
-    if [[ ! -L "$SRCDIR/highfidelity/hifi/interface/external/gverb/include" ]]; then
-      ln -s $SRCDIR/highfidelity/gverb/include $SRCDIR/highfidelity/hifi/interface/external/gverb/include
+    if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include" ]]; then
+      ln -s $SRCDIR/highfidelity/gverb/include $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/inclue
     fi
 
     # Future todo - add a forcable call to the shell script to override this
