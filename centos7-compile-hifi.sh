@@ -51,8 +51,8 @@ function runashifi {
   HIFIRUNDIR=$HIFIDIR/run
   HIFILOGDIR=$HIFIDIR/logs
   cd $HIFIRUNDIR
-  nohup ./domain-server &>> $HIFILOGDIR/domain-$TIMESTAMP.log&
-  nohup ./assignment-client -n 4 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
+  ./domain-server &>> $HIFILOGDIR/domain-$TIMESTAMP.log&
+  ./assignment-client -n 4 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
 }
 
 function doyum {
@@ -65,11 +65,10 @@ function doyum {
 }
 
 function killrunning {
-  kill -9 $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null 2>&1
-  kill -9 $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null 2>&1
-  # Flags HIFIRUNNING here since in the future it will be used as a flag to
-  # check if it actually was running, this makes it restart on rebuild.
-  HIFIRUNNING=1
+  #kill -9 $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null 2>&1
+  #kill -9 $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null 2>&1
+  pkill -f "[d]omain-server" > /dev/null 2>&1
+  pkill -f "[a]ssignment-client" > /dev/null 2>&1
 }
 
 function createuser {
