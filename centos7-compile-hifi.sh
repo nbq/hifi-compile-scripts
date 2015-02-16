@@ -65,8 +65,6 @@ function doyum {
 }
 
 function killrunning {
-  #kill -9 $(ps aux | grep '[d]omain-server' | awk '{print $2}') > /dev/null 2>&1
-  #kill -9 $(ps aux | grep '[a]ssignment-client' | awk '{print $2}') > /dev/null 2>&1
   pkill -f "[d]omain-server" > /dev/null 2>&1
   pkill -f "[a]ssignment-client" > /dev/null 2>&1
 }
@@ -219,20 +217,19 @@ function compilehifi {
     popd > /dev/null
     pushd $SRCDIR/highfidelity/hifi > /dev/null 
 
-    # Link gverb libs in with hifi interface directory
-    # now new directory: /usr/local/src/highfidelity/hifi/libraries/audio-client/external/gverb/
-    if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src" ]]; then
-      ln -s $SRCDIR/highfidelity/gverb/src $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src
-    fi
-    if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include" ]]; then
-      ln -s $SRCDIR/highfidelity/gverb/include $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include
-    fi
-
     # Future todo - add a forcable call to the shell script to override this
     if [[ $(git pull) =~ "Already up-to-date." ]]; then
       echo "Already up to date with last commit."
     else
       NEWHIFI=1
+    fi
+
+    # Link gverb libs in with hifi interface directory
+    if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src" ]]; then
+      ln -s $SRCDIR/highfidelity/gverb/src $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src
+    fi
+    if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include" ]]; then
+      ln -s $SRCDIR/highfidelity/gverb/include $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include
     fi
 
     if [[ $NEWHIFI -eq 1 ]]; then
