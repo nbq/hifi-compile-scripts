@@ -17,15 +17,15 @@ function checkroot {
 }
 
 function writecommands {
-if [[ ! $(cat ~/.bashrc) =~ "compilehifi" && ! $(cat ~/.bashrc) =~ "runhifi" ]]; then
-  echo "Writing Bash Command Aliases"
-cat <<EOF >> ~/.bashrc
-
+# updated this to use /etc/profile.d/coal.sh
+# ! $(cat /etc/profile.d/coal.sh) =~ "compilehifi" && ! $(cat /etc/profile.d/coal.sh) =~ "runhifi"
+if [[ ! -f "/etc/profile.d/coal.sh" ]]; then
+  echo "Writing Command Aliases"
+cat <<EOF >> /etc/profile.d/coal.sh
 alias compilehifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-compile-hifi.sh)'
 alias runhifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-run-hifi.sh)'
-
 EOF
-source ~/.bashrc
+source /etc/profile
 fi
 }
 
@@ -141,13 +141,13 @@ function handlecmake {
   fi
 }
 
-function handleglm {
-  if [[ ! -d "/usr/include/glm" ]]; then
-    wget http://softlayer-dal.dl.sourceforge.net/project/ogl-math/glm-0.9.5.4/glm-0.9.5.4.zip
-    unzip glm-0.9.5.4.zip
-    mv glm/glm /usr/include
-  fi
-}
+#function handleglm {
+#  if [[ ! -d "/usr/include/glm" ]]; then
+#    wget http://softlayer-dal.dl.sourceforge.net/project/ogl-math/glm-0.9.5.4/glm-0.9.5.4.zip
+#    unzip glm-0.9.5.4.zip
+#    mv glm/glm /usr/include
+#  fi
+#}
 
 function handlebullet283 {
   if [ ! -f "Bullet-2.83-alpha.tar.gz" ]; then
@@ -183,7 +183,7 @@ function compilehifi {
     fi
 
     # Handle GLM Check/Install
-    handleglm
+    #handleglm
      
     # Handle BulletSim
     # Check for a file from the default BulletSim Install
@@ -198,15 +198,15 @@ function compilehifi {
 
     cd highfidelity
 
-    if [[ ! -d "gverb" ]]; then
-      git clone https://github.com/highfidelity/gverb.git
-      NEWHIFI=1
-    else
+    #if [[ ! -d "gverb" ]]; then
+    #  git clone https://github.com/highfidelity/gverb.git
+    #  NEWHIFI=1
+    #else
       # assumes this is the proper git directory, could check for .git folder to verify
-      cd gverb
-      git pull > /dev/null
-      cd ..
-    fi
+    #  cd gverb
+    #  git pull > /dev/null
+    #  cd ..
+    #fi
 
     if [[ ! -d "hifi" ]]; then
       git clone https://github.com/highfidelity/hifi.git
@@ -225,12 +225,12 @@ function compilehifi {
     fi
 
     # Link gverb libs in with hifi interface directory
-    if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src" ]]; then
-      ln -s $SRCDIR/highfidelity/gverb/src $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src
-    fi
-    if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include" ]]; then
-      ln -s $SRCDIR/highfidelity/gverb/include $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include
-    fi
+    #if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src" ]]; then
+    #  ln -s $SRCDIR/highfidelity/gverb/src $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src
+    #fi
+    #if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include" ]]; then
+    #  ln -s $SRCDIR/highfidelity/gverb/include $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include
+    #fi
 
     if [[ $NEWHIFI -eq 1 ]]; then
       echo "Source needs compiling."
