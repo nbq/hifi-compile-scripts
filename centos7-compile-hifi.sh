@@ -65,6 +65,7 @@ function doyum {
 }
 
 function killrunning {
+  echo "Killing Running Processess"
   pkill -f "[d]omain-server" > /dev/null 2>&1
   pkill -f "[a]ssignment-client" > /dev/null 2>&1
 }
@@ -141,25 +142,6 @@ function handlecmake {
   fi
 }
 
-#function handleglm {
-#  if [[ ! -d "/usr/include/glm" ]]; then
-#    wget http://softlayer-dal.dl.sourceforge.net/project/ogl-math/glm-0.9.5.4/glm-0.9.5.4.zip
-#    unzip glm-0.9.5.4.zip
-#    mv glm/glm /usr/include
-#  fi
-#}
-
-function handlebullet283 {
-  if [ ! -f "Bullet-2.83-alpha.tar.gz" ]; then
-    wget https://github.com/bulletphysics/bullet3/archive/Bullet-2.83-alpha.tar.gz
-    tar -xzvf Bullet-2.83-alpha.tar.gz
-    cd bullet3-Bullet-2.83-alpha/
-    cmake -G "Unix Makefiles"
-    make && make install
-    cd ..
-  fi
-}
-
 function handlebullet282 {
   #https://bullet.googlecode.com/files/bullet-2.82-r2704.zip
   if [ ! -f "bullet-2.82-r2704.zip" ]; then
@@ -181,9 +163,6 @@ function compilehifi {
     if [[ ! -f "/usr/bin/cmake"  ]]; then
       handlecmake
     fi
-
-    # Handle GLM Check/Install
-    #handleglm
      
     # Handle BulletSim
     # Check for a file from the default BulletSim Install
@@ -197,16 +176,6 @@ function compilehifi {
     fi
 
     cd highfidelity
-
-    #if [[ ! -d "gverb" ]]; then
-    #  git clone https://github.com/highfidelity/gverb.git
-    #  NEWHIFI=1
-    #else
-      # assumes this is the proper git directory, could check for .git folder to verify
-    #  cd gverb
-    #  git pull > /dev/null
-    #  cd ..
-    #fi
 
     if [[ ! -d "hifi" ]]; then
       git clone https://github.com/highfidelity/hifi.git
@@ -224,16 +193,9 @@ function compilehifi {
       NEWHIFI=1
     fi
 
-    # Link gverb libs in with hifi interface directory
-    #if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src" ]]; then
-    #  ln -s $SRCDIR/highfidelity/gverb/src $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/src
-    #fi
-    #if [[ ! -L "$SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include" ]]; then
-    #  ln -s $SRCDIR/highfidelity/gverb/include $SRCDIR/highfidelity/hifi/libraries/audio-client/external/gverb/include
-    #fi
-
     if [[ $NEWHIFI -eq 1 ]]; then
       echo "Source needs compiling."
+      killrunning
       # we are still assumed to be in hifi directory
       if [[ -d "build" ]]; then
         rm -rf build/*
@@ -260,7 +222,7 @@ function movehifi {
   # least error checking here, we pretty much assume that if this is a new compile per the flag
   # then you have all the proper folders and files already.
   if [[ $NEWHIFI -eq 1  ]]; then
-    killrunning
+    #killrunning
     setwebperm
     DSDIR="$SRCDIR/highfidelity/hifi/build/domain-server"
     ACDIR="$SRCDIR/highfidelity/hifi/build/assignment-client"
