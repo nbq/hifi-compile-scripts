@@ -17,16 +17,11 @@ function checkroot {
 }
 
 function writecommands {
-# updated this to use /etc/profile.d/coal.sh
-# ! $(cat /etc/profile.d/coal.sh) =~ "compilehifi" && ! $(cat /etc/profile.d/coal.sh) =~ "runhifi"
-if [[ ! -f "/etc/profile.d/coal.sh" ]]; then
-  echo "Writing Command Aliases"
-cat <<EOF >> /etc/profile.d/coal.sh
+# Always rewrite just incase something changed
+cat <<EOF > /etc/profile.d/coal.sh
 alias compilehifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-compile-hifi.sh)'
 alias runhifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-run-hifi.sh)'
 EOF
-source /etc/profile
-fi
 }
 
 function checkifrunning {
@@ -71,7 +66,6 @@ function killrunning {
 }
 
 function createuser {
-  #HIFIUSER_EXISTS=$(grep -c "^hifi:" /etc/passwd)
   if [[ $(grep -c "^hifi:" /etc/passwd) = "0" ]]; then
     useradd -s /bin/bash -r -m -d $HIFIDIR hifi
     NEWHIFI=1
@@ -238,14 +232,14 @@ function movehifi {
 # Make sure only root can run this
 checkroot
 
+# Make our HiFi user if needed
+createuser
+
 # Handle Yum Install Commands
 doyum
 
 # Deal with the source code and compile highfidelity
 compilehifi
-
-# Make our HiFi user if needed
-createuser
 
 # setup hifi folders
 setuphifidirs

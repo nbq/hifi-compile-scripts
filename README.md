@@ -1,6 +1,6 @@
 # Coal's CentOS 7 Compile Scripts
 
-**NOTICE: THIS IS MEANT TO BE RAN FROM BRAND NEW INSTALLS ONLY**
+**NOTICE: THIS IS MEANT TO BE RAN FROM BRAND NEW INSTALLS OR UPDATES TO INSTALLS FROM THIS SCRIPT**
 
 *This script is subject to change and using it is at your own risk*
 
@@ -12,7 +12,7 @@
 - Updates the componants as needed  
 - Pulls the newest HighFidelity code and if needed, compiles it 
 - Creates a user named `hifi` to run HighFidelity DS/AC under (for security reasons)
-- Writes to the `.bashrc` file the aliases for these local commands 
+- Writes to the `/etc/profile.d/coal.sh` file the aliases for these local commands 
 - Runs the DS/AC stack for the first time      
   - Just a notice, you can access this via a web browser at address `http://IPADDRESS:40100`
 
@@ -22,7 +22,7 @@
  
 # Future updates and utility commands
 
-**After running the above command once, you can call the following commands locally**
+**After running the above command, once you log in again you can call the following commands locally**
 
 - compilehifi
 - runhifi
