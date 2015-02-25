@@ -53,10 +53,10 @@ function runashifi {
 function doyum {
   echo "Installing EPEL Repo."
   yum install epel-release -y > /dev/null 2>&1
-  echo "Installing compile tools, this may take a while on first run."
+  echo "Installing compile tools."
   yum groupinstall "development tools" -y > /dev/null 2>&1
-  echo "Installing base needed tools, this also may take a while on first run."
-  yum install openssl-devel git wget sudo  freeglut* libXmu-* libXi-devel glew glew-devel tbb tbb-devel soxr soxr-devel qt5-qt* -y > /dev/null 2>&1
+  echo "Installing base needed tools."
+  yum install openssl-devel git wget sudo libXmu-* libXi-devel qt5-qt* -y > /dev/null 2>&1
 }
 
 function killrunning {
@@ -136,18 +136,6 @@ function handlecmake {
   fi
 }
 
-function handlebullet282 {
-  #https://bullet.googlecode.com/files/bullet-2.82-r2704.zip
-  if [ ! -f "bullet-2.82-r2704.zip" ]; then
-    wget https://bullet.googlecode.com/files/bullet-2.82-r2704.zip
-    unzip bullet-2.82-r2704.zip
-    cd bullet-2.82-r2704
-    cmake -G "Unix Makefiles"
-    make && make install
-    cd ..
-  fi
-}
-
 function compilehifi {
   # NOTE - This currently assumes /usr/local/src and does not move forward if the source dir does not exist - todo: fix
   if [[ -d "$SRCDIR" ]]; then
@@ -156,13 +144,6 @@ function compilehifi {
     # handle install and compile of cmake
     if [[ ! -f "/usr/bin/cmake"  ]]; then
       handlecmake
-    fi
-     
-    # Handle BulletSim
-    # Check for a file from the default BulletSim Install
-    if [[ ! -a "/usr/local/lib/cmake/bullet/BulletConfig.cmake" || $(cat /usr/local/lib/cmake/bullet/BulletConfig.cmake) =~ "2.83" ]]; then
-      handlebullet282
-      NEWHIFI=1      
     fi
 
     if [[ ! -d "highfidelity" ]]; then
