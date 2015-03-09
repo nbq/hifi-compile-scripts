@@ -42,7 +42,7 @@ function runashifi {
   HIFILOGDIR=$HIFIDIR/logs
   cd $HIFIRUNDIR
   ./domain-server &>> $HIFILOGDIR/domain-$TIMESTAMP.log&
-  ./assignment-client -n 4 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
+  ./assignment-client -n 3 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
 }
 
 checkroot
