@@ -16,19 +16,6 @@ function checkroot {
   [ `whoami` = root ] || { sudo "$0" "$@"; exit $?; }
 }
 
-function writecommands {
-if [[ ! $(cat ~/.bashrc) =~ "compilehifi" && ! $(cat ~/.bashrc) =~ "runhifi" ]]; then
-  echo "Writing Bash Command Aliases"
-cat <<EOF >> ~/.bashrc
-
-alias compilehifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-compile-hifi.sh)'
-alias runhifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-run-hifi.sh)'
-
-EOF
-source ~/.bashrc
-fi
-}
-
 function killrunning {
   pkill -f "[d]omain-server" > /dev/null 2>&1
   pkill -f "[a]ssignment-client" > /dev/null 2>&1
@@ -46,7 +33,6 @@ function runashifi {
 }
 
 checkroot
-writecommands
 killrunning
 export -f runashifi
 su hifi -c "bash -c runashifi"

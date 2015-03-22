@@ -32,7 +32,8 @@ function checkifrunning {
 
 function handlerunhifi {
   if [[ $NEWHIFI -eq 1 || HIFIRUNNING -eq 1 ]]; then
-    echo "Restarting your HiFi Stack as user 'hifi'"
+    echo "Running your HiFi Stack as user hifi"
+    echo "To update your install later, just type 'compilehifi' to begin this safe process again - NO DATA IS LOST"
     export -f runashifi
     su hifi -c "bash -c runashifi"
     exit 0
@@ -47,10 +48,12 @@ function runashifi {
   HIFILOGDIR=$HIFIDIR/logs
   cd $HIFIRUNDIR
   ./domain-server &>> $HIFILOGDIR/domain-$TIMESTAMP.log&
-  ./assignment-client -n 4 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
+  ./assignment-client -n 3 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
 }
 
 function doyum {
+  echo "Updating Your OS - If you see Kernel listed you should restart when done and after type 'runhifi' to restart HighFidelity."
+  yum update -y
   echo "Installing EPEL Repo."
   yum install epel-release -y > /dev/null 2>&1
   echo "Installing compile tools."
