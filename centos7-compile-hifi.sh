@@ -181,7 +181,7 @@ function compilehifi {
         mkdir build
       fi
       cd build
-      cmake ..
+      cmake -DGET_LIBOVR=1 ..
       make domain-server && make assignment-client
       setwebperm
     fi 
