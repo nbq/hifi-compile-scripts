@@ -13,14 +13,16 @@ SRCDIR="/usr/local/src"
 
 ## Functions ##
 function checkroot {
-  [ `whoami` = root ] || { sudo "$0" "$@"; exit $?; }
+  [ `whoami` = root ] || { echo "Please run as root"; exit 0; }
 }
 
 function writecommands {
 # Always rewrite just incase something changed
 cat <<EOF > /etc/profile.d/coal.sh
 alias compilehifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-compile-hifi.sh)'
+alias recompilehifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-recompile-hifi.sh)'
 alias runhifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-run-hifi.sh)'
+alias killhifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-kill-hifi.sh)'
 EOF
 }
 
@@ -157,35 +159,27 @@ function compilehifi {
 
     if [[ ! -d "hifi" ]]; then
       git clone https://github.com/highfidelity/hifi.git
-      NEWHIFI=1
     fi
     
     # popd src
     popd > /dev/null
     pushd $SRCDIR/highfidelity/hifi > /dev/null 
 
-    # Future todo - add a forcable call to the shell script to override this
-    if [[ $(git pull) =~ "Already up-to-date." ]]; then
-      echo "Already up to date with last commit."
-    else
-      NEWHIFI=1
-    fi
+    # update if needed
+    git pull
 
-    if [[ $NEWHIFI -eq 1 ]]; then
-      echo "Source needs compiling."
-      killrunning
-      # we are still assumed to be in hifi directory
-      if [[ -d "build" ]]; then
-        rm -rf build/*
-      else
-        mkdir build
-      fi
-      cd build
-      cmake -DGET_LIBOVR=1 ..
-      make domain-server && make assignment-client
-      setwebperm
-    fi 
-    # ^ Ending the git pull check
+    echo "Source needs compiling."
+    killrunning
+    # we are still assumed to be in hifi directory
+    if [[ -d "build" ]]; then
+      rm -rf build/*
+    else
+      mkdir build
+    fi
+    cd build
+    cmake -DGET_LIBOVR=1 ..
+    make domain-server && make assignment-client
+    setwebperm
 
     # popd on hifi source dir
     popd > /dev/null
@@ -197,18 +191,14 @@ function setwebperm {
 }
 
 function movehifi {
-  # least error checking here, we pretty much assume that if this is a new compile per the flag
-  # then you have all the proper folders and files already.
-  if [[ $NEWHIFI -eq 1  ]]; then
-    #killrunning
-    setwebperm
-    DSDIR="$SRCDIR/highfidelity/hifi/build/domain-server"
-    ACDIR="$SRCDIR/highfidelity/hifi/build/assignment-client"
-    cp $DSDIR/domain-server $RUNDIR
-    cp -R $DSDIR/resources $RUNDIR
-    cp $ACDIR/assignment-client $RUNDIR
-    changeowner
-  fi
+  #killrunning
+  setwebperm
+  DSDIR="$SRCDIR/highfidelity/hifi/build/domain-server"
+  ACDIR="$SRCDIR/highfidelity/hifi/build/assignment-client"
+  cp $DSDIR/domain-server $RUNDIR
+  cp -R $DSDIR/resources $RUNDIR
+  cp $ACDIR/assignment-client $RUNDIR
+  changeowner
 }
 
 ## End Functions ##
