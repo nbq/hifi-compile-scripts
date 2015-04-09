@@ -33,13 +33,11 @@ function checkifrunning {
 }
 
 function handlerunhifi {
-  if [[ $NEWHIFI -eq 1 || HIFIRUNNING -eq 1 ]]; then
-    echo "Running your HiFi Stack as user hifi"
-    echo "To update your install later, just type 'compilehifi' to begin this safe process again - NO DATA IS LOST"
-    export -f runashifi
-    su hifi -c "bash -c runashifi"
-    exit 0
-  fi
+  echo "Running your HiFi Stack as user hifi"
+  echo "To update your install later, just type 'compilehifi' to begin this safe process again - NO DATA IS LOST"
+  export -f runashifi
+  su hifi -c "bash -c runashifi"
+  exit 0
 }
 
 function runashifi {
@@ -73,7 +71,6 @@ function killrunning {
 function createuser {
   if [[ $(grep -c "^hifi:" /etc/passwd) = "0" ]]; then
     useradd -s /bin/bash -r -m -d $HIFIDIR hifi
-    NEWHIFI=1
   fi
 }
 
@@ -92,42 +89,39 @@ function setuphifidirs {
   if [[ ! -d $HIFIDIR ]]; then
     echo "Creating $HIFIDIR"
     mkdir $HIFIDIR
-    NEWHIFI=1
   fi
 
-  # check if this is a new compile, otherwise move handle that process
-  if [[ $NEWHIFI -eq 1 ]]; then
-    pushd $HIFIDIR > /dev/null
+  pushd $HIFIDIR > /dev/null
 
-    if [[ ! -d "$LASTCOMPILE" ]]; then
-      echo "Creating Last-Compile Backup Directory"
-      mkdir $LASTCOMPILE
-    fi
-
-    if [[ ! -d "$RUNDIR" ]]; then
-      echo "Creating Runtime Directory"
-      mkdir $RUNDIR
-    fi
-
-    if [[ -a "$RUNDIR/assignment-client" && -a "$RUNDIR/domain-server" && -d "$RUNDIR/resources" ]]; then
-      echo "Removing Old Last-Compile Backup"
-      rm -rf $LASTCOMPILE/*
-
-      echo "Backing Up AC"
-      mv "$RUNDIR/assignment-client" $LASTCOMPILE
-
-      echo "Backing Up DS"
-      mv "$RUNDIR/domain-server" $LASTCOMPILE
-
-      echo "Making a Copy Of The Resources Folder"
-      cp -R "$RUNDIR/resources" $LASTCOMPILE
-    fi
-
-    if [[ ! -d $LOGSDIR ]]; then
-      mkdir $LOGSDIR
-    fi
-    popd > /dev/null
+  if [[ ! -d "$LASTCOMPILE" ]]; then
+    echo "Creating Last-Compile Backup Directory"
+    mkdir $LASTCOMPILE
   fi
+
+  if [[ ! -d "$RUNDIR" ]]; then
+    echo "Creating Runtime Directory"
+    mkdir $RUNDIR
+  fi
+
+  if [[ -a "$RUNDIR/assignment-client" && -a "$RUNDIR/domain-server" && -d "$RUNDIR/resources" ]]; then
+    echo "Removing Old Last-Compile Backup"
+    rm -rf $LASTCOMPILE/*
+
+    echo "Backing Up AC"
+    mv "$RUNDIR/assignment-client" $LASTCOMPILE
+
+    echo "Backing Up DS"
+    mv "$RUNDIR/domain-server" $LASTCOMPILE
+
+    echo "Making a Copy Of The Resources Folder"
+    cp -R "$RUNDIR/resources" $LASTCOMPILE
+  fi
+
+  if [[ ! -d $LOGSDIR ]]; then
+    mkdir $LOGSDIR
+  fi
+
+  popd > /dev/null
 }
 
 function handlecmake {
