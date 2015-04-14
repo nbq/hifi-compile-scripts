@@ -10,6 +10,8 @@ RUNDIR="$HIFIDIR/run"
 LOGSDIR="$HIFIDIR/logs"
 # Source Storage Dir
 SRCDIR="/usr/local/src"
+# Number of Assignment-Clients to Run
+NUMAC=5
 
 ## Functions ##
 function checkroot {
@@ -48,7 +50,7 @@ function runashifi {
   HIFILOGDIR=$HIFIDIR/logs
   cd $HIFIRUNDIR
   ./domain-server &>> $HIFILOGDIR/domain-$TIMESTAMP.log&
-  ./assignment-client -n 3 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
+  ./assignment-client -n $NUMAC &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
 }
 
 function doyum {
