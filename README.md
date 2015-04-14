@@ -10,7 +10,7 @@
 
 - Command pulls the most current copy of the compile script executes it 
 - Updates the componants as needed  
-- Pulls the newest HighFidelity code and if needed, compiles it 
+- Pulls the newest HighFidelity code and compiles it 
 - Creates a user named `hifi` to run HighFidelity DS/AC under (for security reasons)
 - Writes to the `/etc/profile.d/coal.sh` file the aliases for these local commands 
 - Runs the DS/AC stack for the first time      
@@ -24,16 +24,8 @@
 
 **After running the above command, once you log in again you can call the following commands locally**
 
-- compilehifi
-- runhifi
+- **compilehifi** - Does a force compile on highfidelity
+- **recompulehifi** - Does a recompile only if one is required
+- **runhifi** - Run highfidelity
+- **killhifi** - Kill all running highfidelity instances
 
-*compilehifi*
-
-- Reference the section "What This Script Does" above. 
-
-*runhifi*
-
-- Command pulls the most current copy of the run script which does the following
-- Kills any running HighFidelity DS/AC processes
-- Runs the commands, as premade user `hifi`, to start the domain-server and assignment-client 
-- Keeps you from ever having to handle any manual commands to change to the hifi user to run the commands

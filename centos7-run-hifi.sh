@@ -12,9 +12,6 @@
 # http://hifi-public.s3.amazonaws.com/content-sets/space/models.svo
 #path ^ /1000,100,100
 
-# Number of Assignment-Clients to Run
-NUMAC=5
-
 function checkroot {
   [ `whoami` = root ] || { sudo "$0" "$@"; exit $?; }
 }
@@ -32,7 +29,7 @@ function runashifi {
   HIFILOGDIR=$HIFIDIR/logs
   cd $HIFIRUNDIR
   ./domain-server &>> $HIFILOGDIR/domain-$TIMESTAMP.log&
-  ./assignment-client -n $NUMAC &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
+  ./assignment-client -n 5 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
 }
 
 checkroot
