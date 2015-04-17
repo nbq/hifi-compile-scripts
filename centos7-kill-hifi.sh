@@ -5,8 +5,8 @@ function checkroot {
 }
 
 function killrunning {
-  pkill -f "[d]omain-server" > /dev/null 2>&1
-  pkill -f "[a]ssignment-client" > /dev/null 2>&1
+  pkill -9 -f "[d]omain-server" > /dev/null 2>&1
+  pkill -9 -f "[a]ssignment-client" > /dev/null 2>&1
 }
 
 checkroot
