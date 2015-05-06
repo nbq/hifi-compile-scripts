@@ -13,7 +13,7 @@ SRCDIR="/usr/local/src"
 
 ## Functions ##
 function checkroot {
-  [ `whoami` = root ] || { echo "Please run as root"; exit 0; }
+  [ `whoami` = root ] || { echo "Please run as root"; exit 1; }
 }
 
 function writecommands {
@@ -184,7 +184,25 @@ function compilehifi {
       fi
       cd build
       cmake -DGET_LIBOVR=1 ..
-      make domain-server && make assignment-client
+      
+      make domain-server > $LOGSDIR/last_compile.log
+      if [ $? -eq 0 ]; then
+        echo "DS Build was successful!" >> $LOGSDIR/last_compile.log
+  
+      else
+  	echo "DS Build Failed!" >> $LOGSDIR/last_compile.log
+  	exit 1
+      fi
+
+      make assignment-client >> $LOGSDIR/last_compile.log
+      if [ $? -eq 0 ]; then
+        echo "AC Build was successful!" >> $LOGSDIR/last_compile.log
+  
+      else
+  	echo "AC Build Failed!" >> $LOGSDIR/last_compile.log
+  	exit 1
+      fi
+
       setwebperm
     fi 
     # ^ Ending the git pull check
@@ -226,6 +244,10 @@ doyum
 
 # Deal with the source code and compile highfidelity
 compilehifi
+if [ $? -gt 0 ]; then
+  echo "Command compilehifi failed, see log file $LOGSDIR/last_compile.log" >> $LOGSDIR/last_compile.log
+  exit 1
+fi
 
 # setup hifi folders
 setuphifidirs

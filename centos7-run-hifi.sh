@@ -1,19 +1,7 @@
 #!/bin/bash
 
-# todo: give user option to pick one of the default start sets from
-# http://hifi-public.s3.amazonaws.com/content-sets/content-sets.html
-
-# http://hifi-public.s3.amazonaws.com/content-sets/floating-island/models.svo
-# ^path /1064.2,75.6,915.1/0.0000127922,0.71653,0.0000684642,0.697556
-
-# http://hifi-public.s3.amazonaws.com/content-sets/bar/models.svo
-# ^ path /1048.52,9.5386,1005.7/-0.0000565125,-0.395713,-0.000131155,0.918374
-
-# http://hifi-public.s3.amazonaws.com/content-sets/space/models.svo
-#path ^ /1000,100,100
-
 function checkroot {
-  [ `whoami` = root ] || { sudo "$0" "$@"; exit $?; }
+  [ `whoami` = root ] || { echo "Please run as root"; exit 1; }
 }
 
 function killrunning {

@@ -13,7 +13,7 @@ SRCDIR="/usr/local/src"
 
 ## Functions ##
 function checkroot {
-  [ `whoami` = root ] || { echo "Please run as root"; exit 0; }
+  [ `whoami` = root ] || { echo "Please run as root"; exit 1; }
 }
 
 function writecommands {
