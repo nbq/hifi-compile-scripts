@@ -31,7 +31,7 @@
 
 ## lexicon
 keyword | description
----------------------
+--------|------------
 AC      | Assignment Client - Each assignment runs on an assignment-client
 DS      | Domain Server - The domainserver makes sure that the assignments are collaborating
 HiFi    | High Fidelity
