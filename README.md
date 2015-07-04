@@ -25,7 +25,13 @@
 **After running the above command, once you log in again you can call the following commands locally**
 
 - **compilehifi** - Does a force compile on highfidelity
-- **recompulehifi** - Does a recompile only if one is required
+- **recompilehifi** - Does a recompile only if one is required
 - **runhifi** - Run highfidelity
 - **killhifi** - Kill all running highfidelity instances
 
+## lexicon
+keyword | description
+---------------------
+AC      | Assignment Client - Each assignment runs on an assignment-client
+DS      | Domain Server - The domainserver makes sure that the assignments are collaborating
+HiFi    | High Fidelity
