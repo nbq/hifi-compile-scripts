@@ -31,10 +31,12 @@ function createuser {
 function doapt {
   echo "Installing needed files for compile"
   apt-get update -y
-  apt-get install screen git build-essential cmake qt5-default qtscript5-dev libssl-dev qttools5-dev qttools5-dev-tools -y
-  apt-get install qtmultimedia5-dev libqt5svg5-dev libqt5webkit5-dev libsdl2-dev libasound2 libxmu-dev libxi-dev freeglut3-dev -y
-  apt-get install libasound2-dev libjack-jackd2-dev libxrandr-dev libqt5xmlpatterns5-dev libqt5xmlpatterns5 -y
-  apt-get install libqt5xmlpatterns5-private-dev qml-module-qtquick-controls -y
+
+apt-get install -y screen git build-essential cmake qt5-default qtscript5-dev libssl-dev qttools5-dev qttools5-dev-tools \
+qtmultimedia5-dev libqt5svg5-dev libqt5webkit5-dev libsdl2-dev libasound2 libxmu-dev libxi-dev freeglut3-dev \
+libasound2-dev libjack-jackd2-dev libxrandr-dev libqt5xmlpatterns5-dev libqt5xmlpatterns5 \
+libqt5xmlpatterns5-private-dev qml-module-qtquick-controls
+
 }
 
 function compilehifi {
@@ -128,7 +130,6 @@ function setuphifidirs {
 function movehifi {
   # least error checking here, we pretty much assume that if this is a new compile per the flag
   # then you have all the proper folders and files already.
-  echo "Moving newly compiled HiFi if needed."
   if [[ $NEWHIFI -eq 1  ]]; then
     killrunning
     DSDIR="$SRCDIR/highfidelity/hifi/build/domain-server"
