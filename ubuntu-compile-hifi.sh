@@ -128,6 +128,7 @@ function setuphifidirs {
 function movehifi {
   # least error checking here, we pretty much assume that if this is a new compile per the flag
   # then you have all the proper folders and files already.
+  echo "Moving newly compiled HiFi if needed."
   if [[ $NEWHIFI -eq 1  ]]; then
     killrunning
     DSDIR="$SRCDIR/highfidelity/hifi/build/domain-server"
@@ -145,21 +146,22 @@ function changeowner  {
   fi
 }
 
-function checkifrunning {
+#function checkifrunning {
   # Not used now, but in the future will check if ds/ac is running then offer to restart if so
   # For now we just auto restart.
-  [[ $(pidof domain-server) -gt 0 ]] && { HIFIRUNNING=1; }
-}
+  #[[ $(pidof domain-server) -gt 0 ]] && { HIFIRUNNING=1; }
+#}
 
 function handlerunhifi {
-  checkifrunning
-  if [[ $NEWHIFI -eq 1 || HIFIRUNNING -eq 1 ]]; then
-    echo "Running your HiFi Stack as user hifi"
-    #echo "To update your install later, just type 'compilehifi' to begin this safe process again - NO DATA IS LOST"
-    export -f runashifi
-    su hifi -c "bash -c runashifi"
-    exit 0
-  fi
+  #checkifrunning
+  #if [[ $NEWHIFI -eq 1 || HIFIRUNNING -eq 1 ]]; then
+  echo "Running your HiFi Stack as user hifi"
+  #echo "To update your install later, just type 'compilehifi' to begin this safe process again - NO DATA IS LOST"
+  killrunning
+  export -f runashifi
+  su hifi -c "bash -c runashifi"
+  exit 0
+  #fi
 }
 
 function runashifi {
@@ -183,6 +185,7 @@ function handlerc {
 cat <<EOF > ~/.coalrc
 alias killhifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-kill-hifi.sh)'
 EOF
+
 }
 
 # Steps to create the magic
