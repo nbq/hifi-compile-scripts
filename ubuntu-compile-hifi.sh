@@ -30,7 +30,7 @@ function createuser {
 
 function doapt {
   echo "Installing needed files for compile"
-  apt-get install screen git build-essential cmake qt5-default qtscript5-dev libssl-dev qttools5-dev qttools5-dev-tools qtmultimedia5-dev libqt5svg5-dev libqt5webkit5-dev libs$
+  apt-get install screen git build-essential cmake qt5-default qtscript5-dev libssl-dev qttools5-dev qttools5-dev-tools qtmultimedia5-dev libqt5svg5-dev libqt5webkit5-dev libs -y$
 }
 
 function compilehifi {
