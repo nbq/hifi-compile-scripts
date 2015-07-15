@@ -156,10 +156,10 @@ function handlerunhifi {
   if [[ $NEWHIFI -eq 1 || HIFIRUNNING -eq 1 ]]; then
     echo "Running your HiFi Stack as user hifi"
     #echo "To update your install later, just type 'compilehifi' to begin this safe process again - NO DATA IS LOST"
+    killrunning
     export -f runashifi
     su hifi -c "bash -c runashifi"
     exit 0
-    #su - hifi -c "screen -h 1024 -dmS hifi ./domain-server"
   fi
 }
 
@@ -202,7 +202,4 @@ movehifi
 
 handlerc
 
-killrunning
-
 handlerunhifi
-
