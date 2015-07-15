@@ -102,26 +102,27 @@ function compilehifi {
 
 function setuphifidirs {
 
-  if [[ ! -d $HIFIDIR ]]; then
-    echo "Creating $HIFIDIR"
-    mkdir $HIFIDIR
-    NEWHIFI=1
-  fi
+  #if [[ ! -d $HIFIDIR ]]; then
+  #  echo "Creating $HIFIDIR"
+  #  mkdir $HIFIDIR
+  #  NEWHIFI=1
+  #fi
 
   # check if this is a new compile, otherwise move handle that process
-  if [[ $NEWHIFI -eq 1 ]]; then
-    pushd $HIFIDIR > /dev/null
+  #if [[ $NEWHIFI -eq 1 ]]; then
+  pushd $HIFIDIR > /dev/null
 
-    if [[ ! -d "$RUNDIR" ]]; then
-      echo "Creating Runtime Directory"
-      mkdir $RUNDIR
-    fi
-
-    if [[ ! -d $LOGSDIR ]]; then
-      mkdir $LOGSDIR
-    fi
-    popd > /dev/null
+  if [[ ! -d $RUNDIR ]]; then
+    echo "Creating Runtime Directory"
+    mkdir $RUNDIR
   fi
+
+  if [[ ! -d $LOGSDIR ]]; then
+    mkdir $LOGSDIR
+  fi
+
+  popd > /dev/null
+  #fi
 }
 
 function movehifi {
