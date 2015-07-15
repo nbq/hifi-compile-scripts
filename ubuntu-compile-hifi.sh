@@ -202,5 +202,7 @@ movehifi
 
 handlerc
 
+killrunning
+
 handlerunhifi
 
