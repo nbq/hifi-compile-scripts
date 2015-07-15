@@ -181,7 +181,7 @@ function handlerc {
     echo ". ~/.coalrc" >> ~/.bashrc
   fi
 
-cat <<EOF > ~/.coalrch
+cat <<EOF > ~/.coalrc
 alias killhifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-kill-hifi.sh)'
 EOF
 }
