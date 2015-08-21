@@ -59,7 +59,7 @@ function doyum {
   echo "Installing compile tools."
   yum groupinstall "development tools" -y > /dev/null 2>&1
   echo "Installing base needed tools."
-  yum install openssl-devel git wget sudo libXmu-* libXi-devel libXrandr libXrandr-devel qt5-qt* -y > /dev/null 2>&1
+  yum install openssl-devel glew-devel git wget sudo libXmu-* libXi-devel libXrandr libXrandr-devel qt5-qt* -y > /dev/null 2>&1
 }
 
 function killrunning {
