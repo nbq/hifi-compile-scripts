@@ -35,7 +35,7 @@ function doapt {
 apt-get install -y screen git build-essential cmake qt5-default qtscript5-dev libssl-dev qttools5-dev qttools5-dev-tools \
 qtmultimedia5-dev libqt5svg5-dev libqt5webkit5-dev libsdl2-dev libasound2 libxmu-dev libxi-dev freeglut3-dev \
 libasound2-dev libjack-jackd2-dev libxrandr-dev libqt5xmlpatterns5-dev libqt5xmlpatterns5 \
-libqt5xmlpatterns5-private-dev qml-module-qtquick-controls
+libqt5xmlpatterns5-private-dev qml-module-qtquick-controls libqt5websockets5-dev
 
 }
 
@@ -186,6 +186,7 @@ function handlerc {
 cat <<EOF > ~/.coalrc
 alias killhifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/centos7-kill-hifi.sh)'
 alias compilehifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/ubuntu-compile-hifi.sh)'
+alias runhifi='bash <(curl -Ls https://raw.githubusercontent.com/nbq/hifi-compile-scripts/master/ubuntu-run-hifi.sh)'
 EOF
 
 }
