@@ -9,7 +9,7 @@
 *What This Script Does*
 
 - Command pulls the most current copy of the compile script executes it 
-- Updates the componants as needed  
+- Updates the components as needed  
 - Pulls the newest HighFidelity code and compiles it 
 - Creates a user named `hifi` to run HighFidelity DS/AC under (for security reasons)
 - Writes to the `/etc/profile.d/coal.sh` file the aliases for these local commands 
