@@ -32,7 +32,7 @@ function doapt {
   echo "Installing needed files for compile"
   apt-get update -y
 
-apt-get install -y screen git zlib1g-dev libssl-dev libstdc++6 freeglut3 freeglut3-dev mesa-common-dev libxrandr-dev /
+apt-get install -y screen git zlib1g-dev libssl-dev libstdc++6 freeglut3 freeglut3-dev mesa-common-dev libxrandr-dev \
 libudev-dev libxslt1.1 libpulse0 libgstreamer0.10-0 libgstreamer-plugins-base0.10-0 libicu52 libxcomposite1 -y
 
 }
