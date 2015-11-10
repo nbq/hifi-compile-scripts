@@ -12,6 +12,8 @@ SRCDIR="/usr/local/src"
 CFGNAME="/etc/.chifi"
 # Our lock file name
 LOCKFILE="/etc/.chifilock"
+# CRON SILENT
+SILENT=1
 #TESTING
 #NEWHIFI=1
 
@@ -211,14 +213,14 @@ function checklockfile {
 # Steps to create the magic
 
 # Catch if we are running silent or not
-if [ ! -z $1 ]
-then
-  if [ "$1" -eq "1" ]; then
-    SILENT=1
-  fi
-else
-  SILENT=0
-fi
+#if [ ! -z $1 ]
+#then
+#  if [ "$1" -eq "1" ]; then
+#    SILENT=1
+#  fi
+#else
+#  SILENT=0
+#fi
 
 checklockfile
 
