@@ -8,6 +8,10 @@ RUNDIR="$HIFIDIR/run"
 LOGSDIR="$HIFIDIR/logs"
 # Source Storage Dir
 SRCDIR="/usr/local/src"
+# Config File Name
+CFGNAME="/etc/.chifi"
+# Our lock file name
+LOCKFILE="/etc/.chifilock"
 #TESTING
 #NEWHIFI=1
 
@@ -22,6 +26,8 @@ function killrunning {
 }
 
 function createuser {
+  # Creating our lockfile
+  touch $LOCKFILE
   if [[ $(grep -c "^hifi:" /etc/passwd) = "0" ]]; then
     adduser --system --shell /bin/bash --disabled-password --group --home /home/hifi hifi
     NEWHIFI=1
@@ -29,7 +35,7 @@ function createuser {
 }
 
 function doapt {
-  echo "Installing needed files for compile"
+  [[ "$SILENT" -eq "0" ]] && { echo "Installing needed files for compile"; }
   apt-get update -y
 
 apt-get install -y screen git zlib1g-dev libssl-dev libstdc++6 freeglut3 freeglut3-dev mesa-common-dev libxrandr-dev \
@@ -52,19 +58,18 @@ function compilehifi {
       NEWHIFI=1
     fi
 
-    # popd src
     popd > /dev/null
     pushd $SRCDIR/highfidelity/hifi > /dev/null
 
     # Future todo - add a forcable call to the shell script to override this
     if [[ $(git pull) =~ "Already up-to-date." ]]; then
-      echo "Already up to date with last commit."
+      [[ "$SILENT" -eq "0" ]] && { echo "Already up to date with last commit."; }
     else
       NEWHIFI=1
     fi
 
     if [[ $NEWHIFI -eq 1 ]]; then
-      echo "Source needs compiling."
+      [[ "$SILENT" -eq "0" ]] && { echo "Source needs compiling."; }
       killrunning
       # we are still assumed to be in hifi directory
       if [[ -d "build" ]]; then
@@ -77,18 +82,18 @@ function compilehifi {
 
       make domain-server
       if [ $? -eq 0 ]; then
-        echo "DS Build was successful!"
+        [[ "$SILENT" -eq "0" ]] && { echo "DS Build was successful!"; }
 
       else
-        echo "DS Build Failed!"
+        [[ "$SILENT" -eq "0" ]] && { echo "DS Build Failed!"; }
         exit 1
       fi
 
       make assignment-client
       if [ $? -eq 0 ]; then
-        echo "AC Build was successful!"
+        [[ "$SILENT" -eq "0" ]] && { echo "AC Build was successful!"; }
       else
-        echo "AC Build Failed!"
+        [[ "$SILENT" -eq "0" ]] && { echo "AC Build Failed!"; }
         exit 1
       fi
 
@@ -102,18 +107,10 @@ function compilehifi {
 
 function setuphifidirs {
 
-  #if [[ ! -d $HIFIDIR ]]; then
-  #  echo "Creating $HIFIDIR"
-  #  mkdir $HIFIDIR
-  #  NEWHIFI=1
-  #fi
-
-  # check if this is a new compile, otherwise move handle that process
-  #if [[ $NEWHIFI -eq 1 ]]; then
   pushd $HIFIDIR > /dev/null
 
   if [[ ! -d $RUNDIR ]]; then
-    echo "Creating Runtime Directory"
+    [[ "$SILENT" -eq "0" ]] && { echo "Creating Runtime Directory"; }
     mkdir $RUNDIR
   fi
 
@@ -122,7 +119,7 @@ function setuphifidirs {
   fi
 
   popd > /dev/null
-  #fi
+
 }
 
 function movehifi {
@@ -154,8 +151,10 @@ function changeowner  {
 function handlerunhifi {
   #checkifrunning
   #if [[ $NEWHIFI -eq 1 || HIFIRUNNING -eq 1 ]]; then
-  echo "Running your HiFi Stack as user hifi"
-  #echo "To update your install later, just type 'compilehifi' to begin this safe process again - NO DATA IS LOST"
+  [[ "$SILENT" -eq "0" ]] && { echo "Running your HiFi Stack as user hifi"; }
+  touch $CFGNAME
+  # Delete our lockfile 
+  rm -rf $LOCKFILE
   killrunning
   export -f runashifi
   su hifi -c "bash -c runashifi"
@@ -189,7 +188,37 @@ EOF
 
 }
 
+function checkauto {
+
+  if [ ! -f $CFGNAME ]; then
+    # We have not been ran the first time yet
+    exit 1  
+  fi
+
+}
+
+function checklockfile {
+  if [ -f $LOCKFILE ]; then
+    [[ "$SILENT" -eq "0" ]] && { echo "We are already doing a compile"; }
+    exit 1
+  fi
+}
+
 # Steps to create the magic
+
+# Catch if we are running silent or not
+if [ ! -z $1 ]
+then
+  if [ "$1" -eq "1" ]; then
+    SILENT=1
+  fi
+else
+  SILENT=0
+fi
+
+checklockfile
+
+checkauto
 
 checkroot
 
