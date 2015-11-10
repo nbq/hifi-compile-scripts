@@ -155,9 +155,13 @@ function handlerunhifi {
   touch $CFGNAME
   # Delete our lockfile 
   rm -rf $LOCKFILE
-  killrunning
-  export -f runashifi
-  su hifi -c "bash -c runashifi"
+
+  if [ "$NEWHIFI" -eq "1" ]; then
+    killrunning
+    export -f runashifi
+    su hifi -c "bash -c runashifi"
+  fi
+
   exit 0
   #fi
 }
