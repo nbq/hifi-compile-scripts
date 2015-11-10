@@ -231,7 +231,7 @@ checkroot
 
 createuser
 
-doapt
+[[ "$SILENT" -eq "0" ]] && { doapt; }
 
 setuphifidirs
 
