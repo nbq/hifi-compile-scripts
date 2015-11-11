@@ -183,14 +183,13 @@ EOF
 
 }
 
-function checkauto {
-
-  if [ ! -f $CFGNAME ]; then
+# Right now we have no way to pass a parameter through the bash <(curl) so we always just run anyhow
+#function checkauto {
+#  if [ ! -f $CFGNAME ]; then
     # We have not been ran the first time yet
-    exit 1 
-  fi
-
-}
+#    exit 1 
+#  fi
+#}
 
 # Steps to create the magic
 
@@ -204,15 +203,15 @@ else
   SILENT=0
 fi
 
-checkauto
+#checkauto
 
 checkroot
 
-if [ "$SILENT" -eq "0" ]; then 
+#if [ "$SILENT" -eq "0" ]; then 
   createuser
   doapt
   setuphifidirs
-fi
+#fi
 
 compilehifi
 
