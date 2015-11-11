@@ -14,8 +14,8 @@ CFGNAME="/etc/.chifi"
 LOCKFILE="/etc/.chifilock"
 # CRON SILENT
 SILENT=1
-#TESTING
-#NEWHIFI=1
+# Set as 0 until flagged 1
+NEWHIFI=0
 
 ## Functions ##
 function checkroot {
@@ -70,9 +70,9 @@ function compilehifi {
       NEWHIFI=1
     fi
 
-    if [[ $NEWHIFI -eq 1 ]]; then
+    if [ "$NEWHIFI" -eq "1" ]; then
       [[ "$SILENT" -eq "0" ]] && { echo "Source needs compiling."; }
-      #killrunning
+      killrunning
       # we are still assumed to be in hifi directory
       if [[ -d "build" ]]; then
         rm -rf build/*
@@ -127,7 +127,7 @@ function setuphifidirs {
 function movehifi {
   # least error checking here, we pretty much assume that if this is a new compile per the flag
   # then you have all the proper folders and files already.
-  if [[ $NEWHIFI -eq 1  ]]; then
+  if [ "$NEWHIFI" -eq "1" ]; then
     #killrunning
     DSDIR="$SRCDIR/highfidelity/hifi/build/domain-server"
     ACDIR="$SRCDIR/highfidelity/hifi/build/assignment-client"
