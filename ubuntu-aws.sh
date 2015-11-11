@@ -10,8 +10,6 @@ LOGSDIR="$HIFIDIR/logs"
 SRCDIR="/usr/local/src"
 # Config File Name
 CFGNAME="/etc/.chifi"
-# Our lock file name
-LOCKFILE="/etc/.chifilock"
 # Set as 0 until flagged 1
 NEWHIFI=0
 
@@ -26,8 +24,6 @@ function killrunning {
 }
 
 function createuser {
-  # Creating our lockfile
-  touch $LOCKFILE
   if [[ $(grep -c "^hifi:" /etc/passwd) = "0" ]]; then
     adduser --system --shell /bin/bash --disabled-password --group --home /home/hifi hifi
     NEWHIFI=1
@@ -70,7 +66,7 @@ function compilehifi {
 
     if [ "$NEWHIFI" -eq "1" ]; then
       [[ "$SILENT" -eq "0" ]] && { echo "Source needs compiling."; }
-      #killrunning
+      killrunning
       # we are still assumed to be in hifi directory
       if [[ -d "build" ]]; then
         rm -rf build/*
@@ -152,8 +148,6 @@ function handlerunhifi {
 
   [[ "$SILENT" -eq "0" ]] && { echo "Running your HiFi Stack as user hifi"; }
   touch $CFGNAME
-  # Delete our lockfile 
-  rm -rf $LOCKFILE
 
   if [ "$NEWHIFI" -eq "1" ]; then
     killrunning
@@ -201,13 +195,6 @@ function checkauto {
 
 }
 
-function checklockfile {
-  if [ -f $LOCKFILE ]; then
-    [[ "$SILENT" -eq "0" ]] && { echo "We are already doing a compile"; }
-    exit 1
-  fi
-}
-
 # Steps to create the magic
 
 # Catch if we are running silent or not
@@ -219,8 +206,6 @@ then
 else
   SILENT=0
 fi
-
-checklockfile
 
 checkauto
 
