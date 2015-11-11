@@ -187,10 +187,7 @@ function checkauto {
 
   if [ ! -f $CFGNAME ]; then
     # We have not been ran the first time yet
-    if [ "$SILENT" -eq "1" ]; then
-      # Exit only if we are running in silent mode here
-      exit 1
-    fi  
+    exit 1 
   fi
 
 }
