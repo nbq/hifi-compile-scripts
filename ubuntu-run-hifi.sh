@@ -28,7 +28,7 @@ function runashifi {
   #HIFILOGDIR=$HIFIDIR/logs
   cd $HIFIRUNDIR
   screen -h 1024 -dmS hifi ./domain-server
-  screen -h 1024 -dmS hifi ./assignment-client -n 3
+  screen -h 1024 -dmS hifi ./assignment-client -n 4
   #./domain-server &>> $HIFILOGDIR/domain-$TIMESTAMP.log&
   #./assignment-client -n 3 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
 }
