@@ -134,9 +134,9 @@ function movehifi {
     killrunning
     DSDIR="$SRCDIR/highfidelity/hifi/build/domain-server"
     ACDIR="$SRCDIR/highfidelity/hifi/build/assignment-client"
-    cp $DSDIR/domain-server $RUNDIR
-    cp -R $DSDIR/resources $RUNDIR
-    cp $ACDIR/assignment-client $RUNDIR
+    cp $DSDIR/domain-server $RUNDIR 2>/dev/null
+    cp -uRL $DSDIR/resources $RUNDIR 2>/dev/null
+    cp $ACDIR/assignment-client $RUNDIR 2>/dev/null
     changeowner
   fi
 }
@@ -173,7 +173,7 @@ function runashifi {
   #HIFILOGDIR=$HIFIDIR/logs
   cd $HIFIRUNDIR
   screen -h 1024 -dmS hifi ./domain-server
-  screen -h 1024 -dmS hifi ./assignment-client -n 3
+  screen -h 1024 -dmS hifi ./assignment-client -n 5
   #./domain-server &>> $HIFILOGDIR/domain-$TIMESTAMP.log&
   #./assignment-client -n 3 &>> $HIFILOGDIR/assignment-$TIMESTAMP.log&
 }
